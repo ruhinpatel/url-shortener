@@ -1,7 +1,6 @@
-import asyncio
 import pytest
 import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from unittest.mock import AsyncMock, MagicMock
 
@@ -10,13 +9,6 @@ from app.main import app
 from app.models import Base
 
 TEST_DATABASE_URL = "postgresql+asyncpg://user:pass@localhost:5432/urlshortener_test"
-
-
-@pytest.fixture(scope="session")
-def event_loop():
-    loop = asyncio.new_event_loop()
-    yield loop
-    loop.close()
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -48,7 +40,6 @@ async def mock_redis():
     redis.delete = AsyncMock(side_effect=lambda k: store.pop(k, None))
     redis.ping = AsyncMock(return_value=True)
 
-    # sliding window pipeline mock — always returns [None, None, 1, None]
     pipe = AsyncMock()
     pipe.zremrangebyscore = AsyncMock()
     pipe.zadd = AsyncMock()
@@ -65,6 +56,7 @@ async def client(db_session, mock_redis):
     app.dependency_overrides[get_db] = lambda: db_session
 
     import app.cache as cache_module
+
     original_get_redis = cache_module.get_redis
 
     async def _mock_get_redis():

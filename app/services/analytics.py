@@ -1,8 +1,7 @@
 from datetime import datetime, timezone, timedelta
 from typing import Optional
-from collections import defaultdict
 
-from sqlalchemy import select, func, and_
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import URL, Click

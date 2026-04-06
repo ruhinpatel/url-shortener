@@ -1,5 +1,4 @@
-import pytest
-from app.services.hasher import encode, decode, is_valid_custom_code
+from app.services.hasher import decode, encode, is_valid_custom_code
 
 
 def test_encode_known_values():

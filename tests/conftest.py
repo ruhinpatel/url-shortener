@@ -2,12 +2,11 @@ import asyncio
 import pytest
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from unittest.mock import AsyncMock, MagicMock
 
-from app.main import app
 from app.database import get_db
-from app.cache import get_redis
+from app.main import app
 from app.models import Base
 
 TEST_DATABASE_URL = "postgresql+asyncpg://user:pass@localhost:5432/urlshortener_test"

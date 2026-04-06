@@ -67,12 +67,12 @@ async def resolve_short_url(db: AsyncSession, short_code: str) -> Optional[URL]:
     if cached:
         # still fetch the full row for expiry / active checks (lightweight)
         result = await db.scalar(
-            select(URL).where(URL.short_code == short_code, URL.is_active == True)
+            select(URL).where(URL.short_code == short_code, URL.is_active)
         )
         return result
 
     result = await db.scalar(
-        select(URL).where(URL.short_code == short_code, URL.is_active == True)
+        select(URL).where(URL.short_code == short_code, URL.is_active)
     )
     if result:
         # backfill cache

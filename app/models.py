@@ -19,7 +19,7 @@ class URL(Base):
     __tablename__ = "urls"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    short_code = Column(String(10), unique=True, nullable=False, index=True)
+    short_code = Column(String(20), unique=True, nullable=False, index=True)
     long_url = Column(Text, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.now(), nullable=False)
     expires_at = Column(TIMESTAMP(timezone=True), nullable=True)

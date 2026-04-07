@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
 from typing import Optional
 
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import URL, Click
@@ -70,8 +70,8 @@ async def get_stats(db: AsyncSession, short_code: str, window: str = "all") -> O
             func.count(Click.id).label("cnt"),
         )
         .where(Click.url_id == url.id)
-        .group_by(func.date_trunc("day", Click.clicked_at))
-        .order_by(func.date_trunc("day", Click.clicked_at))
+        .group_by(text("1"))
+        .order_by(text("1"))
     )
     if start:
         day_q = day_q.where(Click.clicked_at >= start)

@@ -32,10 +32,15 @@ async def test_requests_over_limit_return_429(client):
     async def _throttled():
         return throttled_redis
 
+    import app.middleware.rate_limit as rl_module
+
+    original_rl = rl_module.get_redis
     cache_module.get_redis = _throttled
+    rl_module.get_redis = _throttled
     try:
         response = await client.post("/shorten", json={"long_url": "https://example.com"})
         assert response.status_code == 429
         assert "Retry-After" in response.headers
     finally:
         cache_module.get_redis = original
+        rl_module.get_redis = original_rl

@@ -65,3 +65,5 @@ async def client(db_session, mock_redis):
 
     app.dependency_overrides.clear()
     cache_module.get_redis = original_get_redis
+    # reset the Redis singleton so it doesn't leak across event loops
+    cache_module._redis_client = None

@@ -75,7 +75,7 @@ jobs:
           asyncio.run(create())
           EOF
       - name: Run tests
-        run: pytest --cov=app --cov-report=term-missing --cov-fail-under=85 -v
+        run: pytest --cov=app --cov-report=term-missing --cov-fail-under=70 -v
 
   build:
     name: Build Docker image

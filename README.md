@@ -1,5 +1,7 @@
 # URL Shortener
 
+![CI](https://github.com/ruhinpatel/url-shortener/actions/workflows/ci.yml/badge.svg)
+
 A production-grade URL shortening service with click analytics, rate limiting, and TTL support.
 
 ---

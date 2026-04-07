@@ -61,19 +61,6 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Create tables
-        run: |
-          python - <<'EOF'
-          import asyncio
-          from app.database import engine
-          from app.models import Base
-
-          async def create():
-              async with engine.begin() as conn:
-                  await conn.run_sync(Base.metadata.create_all)
-
-          asyncio.run(create())
-          EOF
       - name: Run tests
         run: pytest --cov=app --cov-report=term-missing --cov-fail-under=70 -v
 

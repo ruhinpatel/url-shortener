@@ -2,6 +2,7 @@ import pytest
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.pool import NullPool
 from unittest.mock import AsyncMock, MagicMock
 
 from app.database import get_db
@@ -11,23 +12,17 @@ from app.models import Base
 TEST_DATABASE_URL = "postgresql+asyncpg://user:pass@localhost:5432/urlshortener_test"
 
 
-@pytest_asyncio.fixture(scope="session")
-async def test_engine():
-    engine = create_async_engine(TEST_DATABASE_URL, echo=False)
+@pytest_asyncio.fixture
+async def db_session():
+    # NullPool: no connection reuse across event loops — each test gets a fresh connection
+    engine = create_async_engine(TEST_DATABASE_URL, poolclass=NullPool)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    yield engine
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-    await engine.dispose()
-
-
-@pytest_asyncio.fixture
-async def db_session(test_engine):
-    session_factory = async_sessionmaker(bind=test_engine, expire_on_commit=False)
+    session_factory = async_sessionmaker(bind=engine, expire_on_commit=False)
     async with session_factory() as session:
         yield session
         await session.rollback()
+    await engine.dispose()
 
 
 @pytest_asyncio.fixture

@@ -1,0 +1,14 @@
+.git
+.gitignore
+.env
+.env.*
+tests/
+htmlcov/
+.coverage
+coverage.xml
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+README.md
+*.md

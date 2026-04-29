@@ -37,6 +37,10 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    volumes:
+      - redisdata:/data
+    command: redis-server --appendonly yes
 
 volumes:
   pgdata:
+  redisdata:
